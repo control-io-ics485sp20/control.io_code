@@ -29,22 +29,26 @@
                 color: 0x4d88d5
             });
             var player1 = new THREE.Mesh(player1geo, player1material);
-
-            var player2geo = new THREE.CircleGeometry(.08,32);
-            var player2material = new THREE.MeshBasicMaterial({
-                color: 0xff3d0d
-            });
-            var player2 = new THREE.Mesh(player1geo, player2material);
-
             scene.add(player1);
-            scene.add(player2);
+
+            // var player2geo = new THREE.CircleGeometry(.08,32);
+            // var player2material = new THREE.MeshBasicMaterial({
+            //     color: 0xff3d0d
+            // });
+            // var player2 = new THREE.Mesh(player1geo, player2material);
+            // scene.add(player2);
+
 
             camera.position.z = 5;
 
             function animate() {
                 requestAnimationFrame( animate );
+
+                updatePos();
+
                 renderer.render( scene, camera );
             }
+
             animate();
 
             window.addEventListener('resize', resize);
@@ -67,37 +71,75 @@
             function keydown(e) {
                 switch(e.code) {
                     case "ArrowDown":
-                        window.player1.translateY(-totalspeed);
+                        window.player1.DownPressed = true;
                         break;
                     case "ArrowUp":
-                        window.player1.translateY(totalspeed);
+                        window.player1.UpPressed = true;
                         break;
                     case "ArrowLeft":
-                        window.player1.translateX(-totalspeed);
+                        window.player1.LeftPressed = true;
                         break;
                     case "ArrowRight":
-                        window.player1.translateX(totalspeed);
+                        window.player1.RightPressed = true;
                         break;
                     default:
                         break;
+                }
+            }
+
+            function keyup(e) {
+                switch(e.code) {
+                    case "ArrowDown":
+                        window.player1.DownPressed = false;
+                        break;
+                    case "ArrowUp":
+                        window.player1.UpPressed = false;
+                        break;
+                    case "ArrowLeft":
+                        window.player1.LeftPressed = false;
+                        break;
+                    case "ArrowRight":
+                        window.player1.RightPressed = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var velocity = .03;
+
+            function updatePos() {
+                if (window.player1.DownPressed) {
+                    window.player1.position.y -= velocity;
                 }
 
-                switch(e.code) {
-                    case "KeyS":
-                        window.player2.translateY(-totalspeed);
-                        break;
-                    case "KeyW":
-                        window.player2.translateY(totalspeed);
-                        break;
-                    case "KeyA":
-                        window.player2.translateX(-totalspeed);
-                        break;
-                    case "KeyD":
-                        window.player2.translateX(totalspeed);
-                        break;
-                    default:
-                        break;
+                if (window.player1.UpPressed) {
+                    window.player1.position.y += velocity;
                 }
+
+                if (window.player1.LeftPressed) {
+                    window.player1.position.x -= velocity;
+                }
+
+                if (window.player1.RightPressed) {
+                    window.player1.position.x += velocity;
+                }
+            }
+
+            function moveLeft() {
+                window.player1.position.x -= 1;
+            }
+
+            function moveRight() {
+                window.player1.position.x += 1;
+            }
+
+            function moveUp() {
+                window.player1.position.y -= 1;
+            }
+
+            function moveDown() {
+                window.player1.position.y += 1;
             }
             
 		</script>
