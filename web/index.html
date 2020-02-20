@@ -11,303 +11,173 @@
 	<body>
 		<script src="js/three.js"></script>
 		<script>
-            //Web JS Project.
+            //Web JS Project that implements THREE.js.
             //Literally based off of tutorial:
             //https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
-            //TODO need to clean up code
 
+            /** 
+             * Player
+             * Class that represents a Player
+             */
+            class Player {
+                constructor(color, name, keybinds) {
+                    this.keybinds = keybinds;
+                    this.geometry = new THREE.CircleGeometry(.08,32);
+                    this.material = new THREE.MeshBasicMaterial({
+                        color: color
+                    });
+                    this.player_object = new THREE.Mesh(this.geometry, this.material);
+                };
+
+                getPlayerObject () {
+                    return this.player_object;
+                };
+
+                moveUp () {
+                    this.player_object.position.y += window.player_max_velocity;
+                }
+
+                moveDown () {
+                    this.player_object.position.y -= window.player_max_velocity;
+                }
+
+                moveLeft () {
+                    this.player_object.position.x -= window.player_max_velocity;
+                }
+
+                moveRight () {
+                    this.player_object.position.x += window.player_max_velocity;
+                }
+
+                updatePos () {
+                    if (this.UpPressed) {
+                        this.moveUp();
+                    }
+                    if (this.DownPressed) {
+                        this.moveDown();
+                    }
+                    if (this.LeftPressed) {
+                        this.moveLeft();
+                    }
+                    if (this.RightPressed) {
+                        this.moveRight();
+                    }
+                }
+
+                keyDown (e) {
+                    switch(e.code) {
+                        case this.keybinds.up:
+                            this.UpPressed = true;
+                            break;
+                        case this.keybinds.down:
+                            this.DownPressed = true;
+                            break;
+                        case this.keybinds.left:
+                            this.LeftPressed = true;
+                            break;
+                        case this.keybinds.right:
+                            this.RightPressed = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                keyUp (e) {
+                    switch(e.code) {
+                        case this.keybinds.up:
+                            this.UpPressed = false;
+                            break;
+                        case this.keybinds.down:
+                            this.DownPressed = false;
+                            break;
+                        case this.keybinds.left:
+                            this.LeftPressed = false;
+                            break;
+                        case this.keybinds.right:
+                            this.RightPressed = false;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+
+            var player_max_velocity = .05;
+            var players = [];
+
+            var zoom_percent = 100;
             var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            var camera = new THREE.PerspectiveCamera( zoom_percent, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            camera.position.z = 5;
 
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
 
-            var totalspeed = .03;
+            window.addEventListener('gamepadconnected', controllerConnectedEvent);
+            window.addEventListener('resize', windowResizeEvent);
+            window.addEventListener('keydown', keyDownEvent);
+            window.addEventListener('keyup', keyUpEvent);
 
-            var player1geo = new THREE.CircleGeometry(.08,32);
-            var player2geo = new THREE.CircleGeometry(.08,32);
-            var player3geo = new THREE.CircleGeometry(.08,32);
-            var player4geo = new THREE.CircleGeometry(.08,32);
+            //Literally from https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
+            /**
+             * controllerConnectedEvent
+             * Detects when a gamepad is connected
+             */
+            function controllerConnectedEvent(event) {
+                console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+                event.gamepad.index, event.gamepad.id,
+                event.gamepad.buttons.length, event.gamepad.axes.length);
 
-            var player1material = new THREE.MeshBasicMaterial({
-                color: 0x4d88d5
-            });
-            var player2material = new THREE.MeshBasicMaterial({
-                color: 0xff0000
-            });
-            var player3material = new THREE.MeshBasicMaterial({
-                color: 0x009933
-            });
-            var player4material = new THREE.MeshBasicMaterial({
-                color: 0xffff00
-            });
-
-            var player1 = new THREE.Mesh(player1geo, player1material);
-            var player2 = new THREE.Mesh(player1geo, player2material);
-            var player3 = new THREE.Mesh(player1geo, player3material);
-            var player4 = new THREE.Mesh(player1geo, player4material);
-
-            scene.add(player1);
-            scene.add(player2);
-            scene.add(player3);
-            scene.add(player4);
-
-            camera.position.z = 5;
-
-            function animate() {
-                requestAnimationFrame( animate );
-
-                updatePos();
-
-                renderer.render( scene, camera );
-            }
-            animate();
-
-
-            window.addEventListener('resize', resize);
-            window.addEventListener('keydown', keydown);
-            window.addEventListener('keyup', keyup);
-
-            window.addEventListener('gamepadconnected', controllerconnected);
-                
-            function controllerconnected(e) {
-            console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
-                e.gamepad.index, e.gamepad.id,
-                e.gamepad.buttons.length, e.gamepad.axes.length);
-
-
+                //imagine spawning a player when they connect a gamepad though. Could make for a cool feature.
             };
 
-            function resize() {
+            //probably should set the size proportionally
+            function windowResizeEvent() {
                 renderer.setSize( window.innerWidth, window.innerHeight );
             }
 
-            function keydown(e) {
-                switch(e.code) {
-                    case "ArrowDown":
-                        window.player1.DownPressed = true;
-                        break;
-                    case "ArrowUp":
-                        window.player1.UpPressed = true;
-                        break;
-                    case "ArrowLeft":
-                        window.player1.LeftPressed = true;
-                        break;
-                    case "ArrowRight":
-                        window.player1.RightPressed = true;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyS":
-                        window.player2.DownPressed = true;
-                        break;
-                    case "KeyW":
-                        window.player2.UpPressed = true;
-                        break;
-                    case "KeyA":
-                        window.player2.LeftPressed = true;
-                        break;
-                    case "KeyD":
-                        window.player2.RightPressed = true;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyK":
-                        window.player3.DownPressed = true;
-                        break;
-                    case "KeyI":
-                        window.player3.UpPressed = true;
-                        break;
-                    case "KeyJ":
-                        window.player3.LeftPressed = true;
-                        break;
-                    case "KeyL":
-                        window.player3.RightPressed = true;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyB":
-                        window.player4.DownPressed = true;
-                        break;
-                    case "KeyG":
-                        window.player4.UpPressed = true;
-                        break;
-                    case "KeyV":
-                        window.player4.LeftPressed = true;
-                        break;
-                    case "KeyN":
-                        window.player4.RightPressed = true;
-                        break;
-                    default:
-                        break;
-                }
+            function keyDownEvent(event) {
+                players.forEach(function (player) {
+                    player.keyDown(event);
+                });
             }
 
-            function keyup(e) {
-                switch(e.code) {
-                    case "ArrowDown":
-                        window.player1.DownPressed = false;
-                        break;
-                    case "ArrowUp":
-                        window.player1.UpPressed = false;
-                        break;
-                    case "ArrowLeft":
-                        window.player1.LeftPressed = false;
-                        break;
-                    case "ArrowRight":
-                        window.player1.RightPressed = false;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyS":
-                        window.player2.DownPressed = false;
-                        break;
-                    case "KeyW":
-                        window.player2.UpPressed = false;
-                        break;
-                    case "KeyA":
-                        window.player2.LeftPressed = false;
-                        break;
-                    case "KeyD":
-                        window.player2.RightPressed = false;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyK":
-                        window.player3.DownPressed = false;
-                        break;
-                    case "KeyI":
-                        window.player3.UpPressed = false;
-                        break;
-                    case "KeyJ":
-                        window.player3.LeftPressed = false;
-                        break;
-                    case "KeyL":
-                        window.player3.RightPressed = false;
-                        break;
-                    default:
-                        break;
-                }
-
-                switch(e.code) {
-                    case "KeyB":
-                        window.player4.DownPressed = false;
-                        break;
-                    case "KeyG":
-                        window.player4.UpPressed = false;
-                        break;
-                    case "KeyV":
-                        window.player4.LeftPressed = false;
-                        break;
-                    case "KeyN":
-                        window.player4.RightPressed = false;
-                        break;
-                    default:
-                        break;
-                }
+            function keyUpEvent(event) {
+                players.forEach(function (player) {
+                    player.keyUp(event);
+                });
             }
-
-            var velocity = .05;
 
             function updatePos() {
-                if (window.player1.DownPressed) {
-                    window.player1.position.y -= velocity;
-                }
-
-                if (window.player1.UpPressed) {
-                    window.player1.position.y += velocity;
-                }
-
-                if (window.player1.LeftPressed) {
-                    window.player1.position.x -= velocity;
-                }
-
-                if (window.player1.RightPressed) {
-                    window.player1.position.x += velocity;
-                }
-
-                if (window.player2.DownPressed) {
-                    window.player2.position.y -= velocity;
-                }
-
-                if (window.player2.UpPressed) {
-                    window.player2.position.y += velocity;
-                }
-
-                if (window.player2.LeftPressed) {
-                    window.player2.position.x -= velocity;
-                }
-
-                if (window.player2.RightPressed) {
-                    window.player2.position.x += velocity;
-                }
-
-                if (window.player3.DownPressed) {
-                    window.player3.position.y -= velocity;
-                }
-
-                if (window.player3.UpPressed) {
-                    window.player3.position.y += velocity;
-                }
-
-                if (window.player3.LeftPressed) {
-                    window.player3.position.x -= velocity;
-                }
-
-                if (window.player3.RightPressed) {
-                    window.player3.position.x += velocity;
-                }
-
-                if (window.player4.DownPressed) {
-                    window.player4.position.y -= velocity;
-                }
-
-                if (window.player4.UpPressed) {
-                    window.player4.position.y += velocity;
-                }
-
-                if (window.player4.LeftPressed) {
-                    window.player4.position.x -= velocity;
-                }
-
-                if (window.player4.RightPressed) {
-                    window.player4.position.x += velocity;
-                }
+                players.forEach(function (player) {
+                    player.updatePos();
+                });
             }
 
-            // function moveLeft() {
-            //     window.player1.position.x -= 1;
-            // }
+            function animate() {
+                requestAnimationFrame(animate);
 
-            // function moveRight() {
-            //     window.player1.position.x += 1;
-            // }
+                updatePos();
 
-            // function moveUp() {
-            //     window.player1.position.y -= 1;
-            // }
+                renderer.render(scene, camera);
+            }
 
-            // function moveDown() {
-            //     window.player1.position.y += 1;
-            // }
+            function init() {
+                players.push(new Player(0x4d88d5, "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight"}));
+                players.push(new Player(0xff0000, "Player 2", {up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}));
+                players.push(new Player(0x009933, "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL"}));
+                players.push(new Player(0xffff00, "Player 4", {up: "KeyG", down: "KeyB", left: "KeyV", right: "KeyN"}));
+                
+                players.forEach(function (player) {
+                    scene.add(player.getPlayerObject());
+                });
+            };
 
-            // animate();
+            //initializes and animates the project
+            init();
+            animate();
 		</script>
 	</body>
 </html>
