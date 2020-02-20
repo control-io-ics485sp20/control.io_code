@@ -1,0 +1,153 @@
+{
+  "basics": {
+    "name": "Woojoon Hwang",
+    "label": "Student",
+    "picture": "https://github.com/hwangwooj/hwangwooj.github.io/blob/master/images/hwang.jpeg?raw=true",
+    "email": "hwangwoo@hawaii.edu",
+    "phone": "808-256-0679",
+    "website": "https://rainbow.github.io",
+    "summary": "I am a senior studying for a B.S. in Computer Science in the Department of Information and Computer Sciences at the University of Hawaii.",
+    "location": {
+      "address": "905 Spencer Street",
+      "postalCode": "96822",
+      "city": "Honolulu",
+      "countryCode": "USA",
+      "region": "Hawaii"
+    },
+    "profiles": [
+      {
+        "network": "github",
+        "username": "hwangwooj",
+        "url": "https://github.com/hwangwooj/hwangwooj.github.io"
+      },
+      {
+        "network": "linkedin",
+        "username": "hwangwoo",
+        "url": "https://www.linkedin.com/in/woojoon-hwang-93014b178/"
+      },
+      {
+        "network": "Instagram",
+        "username": "wooh_21",
+        "url": "https://www.instagram.com/wooh_21/?hl=ko"
+      }
+    ]
+  },
+  "interests": [
+    {
+      "name": "Database",
+      "keywords": [
+
+      ]
+    },
+    {
+      "name": "Software Developing",
+      "keywords": [
+      ]
+    },
+    {
+      "name": "Operating System",
+      "keywords": [
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages and Frameworks",
+      "level": "",
+      "keywords": [
+        "C",
+        "Unix",
+        "Java",
+        "Javascript",
+      ]
+    },
+    {
+      "name": "Tools",
+      "level": "",
+      "keywords": [
+        "MacOS",
+        "Git/GitHub",
+        "g++"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Hawaii, Honolulu, HI",
+      "area": "Computer Science (expected Spring, 2020)",
+      "studyType": "B.S.",
+      "startDate": "2018-01-08",
+      "endDate": "Present",
+      "gpa": "3.49",
+      "courses": [
+        "COM 350: Mediated Interpersonal Com",
+        "ICS 212: Program Structure",
+        "ICS 311: Algorithms",
+        "ICS 314: Software Engineering I",
+        "ICS 321: Database Systems I",
+        "ICS 332: Operating Systems",
+        "ICS 414: Software Engineering II",
+        "ICS 451: Data Networks",
+        "ICS 469: Cognitive Science"
+      ]
+    },
+    {
+      "institution": "University of Hawaii: Kapi'olani Community College, Honolulu, Hawaii",
+      "area": "Liberal Arts",
+      "studyType": "A.A.",
+      "startDate": "2014-08-21",
+      "endDate": "2017-12-10",
+      "gpa": "3.68",
+      "courses": [
+        "COM 201: WI-Intro to Communication",
+        "ENG 272: WI-H-Lit-Hawai'i,Oceania&Asia",
+        "ICS 111: Intro to Computer Science I",
+        "MATH 241: Calculus I",
+        "MATH 242: Calculus II",
+        "MATH 243: Calculus III",
+        "MATH 244: Calculus IV"
+      ]
+    }
+  ],
+  "work":[
+    {
+      "company": "Le Ciel Hawaii Inc",
+      "position": "photographer assistant/office management",
+      "startDate": "2014-07-08",
+      "endDate": "2015-07-01",
+      "highlights" :[
+        "Assisting photographer while shooting the honeymoon photographing",
+        "Editing photos taken by photographers using Adobe Lightroom",
+        "Scheduling & managing reservation between customers and photographers"
+      ]
+    }
+  ],
+  "volunteer": [
+    {
+      "site": "Christ United Methodist Church ",
+      "position": "Teaching assistant ",
+      "startDate": "2015-09-01",
+      "endDate": "2015-12-12",
+      "highlights" :[
+        "Assisting Korean teacher during the Korean lecturing",
+        "Take part in regular meetings regarding improvement for language school"
+
+      ]
+    }
+
+  ],
+  "awards": [
+    {
+      "title": "Dean’s List Honoree",
+      "date": "2015-2016",
+      "awarder": "Kapi‘olani Community College",
+      "summary": "Scholarships awarded to incoming freshmen and continuing studenKapi‘olani Community College honors those students who earn a grade-point average of 3.5 or higher with 15 or more total credits accumulated over Fall and/or Spring and/or Summer semesters (of one academic year) by placing their name on the Dean’s List."
+    }
+  ],
+  "references": [
+    {
+      "name": "Available upon request",
+      "reference": ""
+    }
+  ]
+}
