@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Control.io Beta</title>
+		<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+            //Web JS Project.
+            //Literally based off of tutorial:
+            //https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
+
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+            var totalspeed = .03;
+
+            var player1geo = new THREE.CircleGeometry(.08,32);
+            var player1material = new THREE.MeshBasicMaterial({
+                color: 0x4d88d5
+            });
+            var player1 = new THREE.Mesh(player1geo, player1material);
+
+            var player2geo = new THREE.CircleGeometry(.08,32);
+            var player2material = new THREE.MeshBasicMaterial({
+                color: 0xff3d0d
+            });
+            var player2 = new THREE.Mesh(player1geo, player2material);
+
+            scene.add(player1);
+            scene.add(player2);
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame( animate );
+                renderer.render( scene, camera );
+            }
+            animate();
+
+            window.addEventListener('resize', resize);
+            window.addEventListener('keydown', keydown);
+
+            window.addEventListener('gamepadconnected', controllerconnected);
+                
+            function controllerconnected(e) {
+            console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+                e.gamepad.index, e.gamepad.id,
+                e.gamepad.buttons.length, e.gamepad.axes.length);
+
+
+            };
+
+            function resize() {
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }
+
+            function keydown(e) {
+                switch(e.code) {
+                    case "ArrowDown":
+                        window.player1.translateY(-totalspeed);
+                        break;
+                    case "ArrowUp":
+                        window.player1.translateY(totalspeed);
+                        break;
+                    case "ArrowLeft":
+                        window.player1.translateX(-totalspeed);
+                        break;
+                    case "ArrowRight":
+                        window.player1.translateX(totalspeed);
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(e.code) {
+                    case "KeyS":
+                        window.player2.translateY(-totalspeed);
+                        break;
+                    case "KeyW":
+                        window.player2.translateY(totalspeed);
+                        break;
+                    case "KeyA":
+                        window.player2.translateX(-totalspeed);
+                        break;
+                    case "KeyD":
+                        window.player2.translateX(totalspeed);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+		</script>
+	</body>
+</html>

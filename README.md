@@ -1,2 +1,4 @@
 # control.io-ics485sp20
-control.io game concept
+Control.io Game Concept
+
+Uses THREE.js
