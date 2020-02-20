@@ -25,19 +25,32 @@
             var totalspeed = .03;
 
             var player1geo = new THREE.CircleGeometry(.08,32);
+            var player2geo = new THREE.CircleGeometry(.08,32);
+            var player3geo = new THREE.CircleGeometry(.08,32);
+            var player4geo = new THREE.CircleGeometry(.08,32);
+
             var player1material = new THREE.MeshBasicMaterial({
                 color: 0x4d88d5
             });
+            var player2material = new THREE.MeshBasicMaterial({
+                color: 0xff0000
+            });
+            var player3material = new THREE.MeshBasicMaterial({
+                color: 0x009933
+            });
+            var player4material = new THREE.MeshBasicMaterial({
+                color: 0xffff00
+            });
+
             var player1 = new THREE.Mesh(player1geo, player1material);
+            var player2 = new THREE.Mesh(player1geo, player2material);
+            var player3 = new THREE.Mesh(player1geo, player3material);
+            var player4 = new THREE.Mesh(player1geo, player4material);
+
             scene.add(player1);
-
-            // var player2geo = new THREE.CircleGeometry(.08,32);
-            // var player2material = new THREE.MeshBasicMaterial({
-            //     color: 0xff3d0d
-            // });
-            // var player2 = new THREE.Mesh(player1geo, player2material);
-            // scene.add(player2);
-
+            scene.add(player2);
+            scene.add(player3);
+            scene.add(player4);
 
             camera.position.z = 5;
 
@@ -48,11 +61,12 @@
 
                 renderer.render( scene, camera );
             }
-
             animate();
+
 
             window.addEventListener('resize', resize);
             window.addEventListener('keydown', keydown);
+            window.addEventListener('keyup', keyup);
 
             window.addEventListener('gamepadconnected', controllerconnected);
                 
@@ -85,6 +99,57 @@
                     default:
                         break;
                 }
+
+                switch(e.code) {
+                    case "KeyS":
+                        window.player2.DownPressed = true;
+                        break;
+                    case "KeyW":
+                        window.player2.UpPressed = true;
+                        break;
+                    case "KeyA":
+                        window.player2.LeftPressed = true;
+                        break;
+                    case "KeyD":
+                        window.player2.RightPressed = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(e.code) {
+                    case "KeyK":
+                        window.player3.DownPressed = true;
+                        break;
+                    case "KeyI":
+                        window.player3.UpPressed = true;
+                        break;
+                    case "KeyJ":
+                        window.player3.LeftPressed = true;
+                        break;
+                    case "KeyL":
+                        window.player3.RightPressed = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(e.code) {
+                    case "KeyB":
+                        window.player4.DownPressed = true;
+                        break;
+                    case "KeyG":
+                        window.player4.UpPressed = true;
+                        break;
+                    case "KeyV":
+                        window.player4.LeftPressed = true;
+                        break;
+                    case "KeyN":
+                        window.player4.RightPressed = true;
+                        break;
+                    default:
+                        break;
+                }
             }
 
             function keyup(e) {
@@ -104,9 +169,60 @@
                     default:
                         break;
                 }
+
+                switch(e.code) {
+                    case "KeyS":
+                        window.player2.DownPressed = false;
+                        break;
+                    case "KeyW":
+                        window.player2.UpPressed = false;
+                        break;
+                    case "KeyA":
+                        window.player2.LeftPressed = false;
+                        break;
+                    case "KeyD":
+                        window.player2.RightPressed = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(e.code) {
+                    case "KeyK":
+                        window.player3.DownPressed = false;
+                        break;
+                    case "KeyI":
+                        window.player3.UpPressed = false;
+                        break;
+                    case "KeyJ":
+                        window.player3.LeftPressed = false;
+                        break;
+                    case "KeyL":
+                        window.player3.RightPressed = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                switch(e.code) {
+                    case "KeyB":
+                        window.player4.DownPressed = false;
+                        break;
+                    case "KeyG":
+                        window.player4.UpPressed = false;
+                        break;
+                    case "KeyV":
+                        window.player4.LeftPressed = false;
+                        break;
+                    case "KeyN":
+                        window.player4.RightPressed = false;
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            var velocity = .03;
+            var velocity = .05;
 
             function updatePos() {
                 if (window.player1.DownPressed) {
@@ -124,24 +240,73 @@
                 if (window.player1.RightPressed) {
                     window.player1.position.x += velocity;
                 }
+
+                if (window.player2.DownPressed) {
+                    window.player2.position.y -= velocity;
+                }
+
+                if (window.player2.UpPressed) {
+                    window.player2.position.y += velocity;
+                }
+
+                if (window.player2.LeftPressed) {
+                    window.player2.position.x -= velocity;
+                }
+
+                if (window.player2.RightPressed) {
+                    window.player2.position.x += velocity;
+                }
+
+                if (window.player3.DownPressed) {
+                    window.player3.position.y -= velocity;
+                }
+
+                if (window.player3.UpPressed) {
+                    window.player3.position.y += velocity;
+                }
+
+                if (window.player3.LeftPressed) {
+                    window.player3.position.x -= velocity;
+                }
+
+                if (window.player3.RightPressed) {
+                    window.player3.position.x += velocity;
+                }
+
+                if (window.player4.DownPressed) {
+                    window.player4.position.y -= velocity;
+                }
+
+                if (window.player4.UpPressed) {
+                    window.player4.position.y += velocity;
+                }
+
+                if (window.player4.LeftPressed) {
+                    window.player4.position.x -= velocity;
+                }
+
+                if (window.player4.RightPressed) {
+                    window.player4.position.x += velocity;
+                }
             }
 
-            function moveLeft() {
-                window.player1.position.x -= 1;
-            }
+            // function moveLeft() {
+            //     window.player1.position.x -= 1;
+            // }
 
-            function moveRight() {
-                window.player1.position.x += 1;
-            }
+            // function moveRight() {
+            //     window.player1.position.x += 1;
+            // }
 
-            function moveUp() {
-                window.player1.position.y -= 1;
-            }
+            // function moveUp() {
+            //     window.player1.position.y -= 1;
+            // }
 
-            function moveDown() {
-                window.player1.position.y += 1;
-            }
-            
+            // function moveDown() {
+            //     window.player1.position.y += 1;
+            // }
+
+            // animate();
 		</script>
 	</body>
 </html>
