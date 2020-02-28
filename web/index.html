@@ -39,6 +39,8 @@
                     this.coordsArray = [];
                     this.linesArray = [];
 
+                    this.claimedShapesArray = [];
+
                     this.name = name;
 
                     this.color = color;
@@ -49,13 +51,24 @@
                     this.prevRJ_Y = 0;
 
                     this.keybinds = keybinds;
-                    this.geometry = new THREE.CircleGeometry(player_radius, 32);
+
+                    this.geometry = new THREE.RingGeometry(player_radius, (player_radius + .03), 32);
                     this.material = new THREE.MeshBasicMaterial({
-                        color: color
+                        color: color,
+                        side: THREE.DoubleSide
                     });
                     this.player_object = new THREE.Mesh(this.geometry, this.material);
+
+                    // this.geometry = new THREE.CircleGeometry(player_radius, 32);
+                    // this.material = new THREE.MeshBasicMaterial({
+                    //     color: color
+                    // });
+                    // this.player_object = new THREE.Mesh(this.geometry, this.material);
+
                     this.randomSpawn();
                     this.newCoord();
+
+                    this.guidingLine = new GuidingLine(this.coordsArray[0].x, this.coordsArray[0].y, this.player_object.position.x, this.player_object.position.y, this.color);
                 };
 
                 randomSpawn() {
@@ -123,12 +136,9 @@
                     var player_x = this.player_object.position.x + (player_max_velocity * modifier);
                     this.player_object.position.x = player_x;
                     
+                    this.guidingLine.guidingLineObject.geometry.vertices[1].x = player_x;
+                    this.guidingLine.guidingLineObject.geometry.verticesNeedUpdate = true;
                     //TODO Constrain x axes movement to area
-                    // if (player_x <= max_x/canvas_multiplier) {
-                    //     this.player_object.position.x = player_x;
-                    // } else {
-                    //     this.player_object.position.x = max_x/canvas_multiplier;
-                    // }
                 }
 
                 /*
@@ -141,12 +151,9 @@
                     var player_y = this.player_object.position.y + (player_max_velocity * modifier);
                     this.player_object.position.y = player_y;
                     
+                    this.guidingLine.guidingLineObject.geometry.vertices[1].y = player_y;
+                    this.guidingLine.guidingLineObject.geometry.verticesNeedUpdate = true;
                     //TODO Constrain y axes movement to area
-                    // if (player_y >= min_y/canvas_multiplier) {
-                    //     this.player_object.position.y = player_y;
-                    // } else {
-                    //     this.player_object.position.y = min_y/canvas_multiplier;
-                    // }
                 }
 
                 newCoord() {
@@ -157,17 +164,43 @@
 
                         this.coordsArray.push(new Coordinate(this.player_object.position.x, this.player_object.position.y, this.color));
 
-                        this.linesArray.push(new CoordinateLine(this.player_object.position.x, this.player_object.position.y, lastCoord.coordObject.position.x, lastCoord.coordObject.position.y, this.color));
+                        this.linesArray.push(new CoordinateLine(this.player_object.position.x, this.player_object.position.y, lastCoord.x, lastCoord.y, this.color));
+                        
+                        this.guidingLine.guidingLineObject.geometry.vertices[0].x = this.player_object.position.x;
+                        this.guidingLine.guidingLineObject.geometry.vertices[0].y = this.player_object.position.y;
                     }
                 }
 
                 setPoly() {
-                    // this.coordsArray = [];
-                    // this.linesArray = [];
+                    this.newCoord();
+
+                    this.claimedShapesArray.push(new Polygon(this.coordsArray, this.color));
+
+                    while (this.coordsArray.length > 0) {
+                        var n = this.coordsArray.pop();
+                        scene.remove(n.coordObject);
+                    }
+
+                    while (this.linesArray.length > 0) {
+                        var n = this.linesArray.pop();
+                        scene.remove(n.coordLineObject);
+                    }
+
+                    this.newCoord();
                 }
 
                 updatePos () {
                     if (this.gamepad == undefined) {
+                        if (this.ALocked == false) {
+                            this.newCoord();
+                            this.ALocked = true;
+                        }
+
+                        if (this.BLocked == false) {
+                            this.setPoly();
+                            this.BLocked = true;
+                        }
+
                         if (this.UpPressed) {
                             this.moveUp();
                         }
@@ -182,7 +215,6 @@
                         }
                     } else {
                         if (this.ALocked == false && this.gamepad.buttons[0].pressed) {
-                            // this.APressed = true;
                             this.newCoord();
                             this.ALocked = true;
                         } else if (!this.gamepad.buttons[0].pressed) {
@@ -190,14 +222,11 @@
                         }
 
                         if (this.BLocked == false && this.gamepad.buttons[1].pressed) {
-                            // this.APressed = true;
                             this.setPoly();
                             this.BLocked = true;
                         } else if (!this.gamepad.buttons[1].pressed) {
                             this.BLocked = false;
                         }
-                        // this.APressed = this.gamepad.buttons[0].pressed;
-                        // this.BPressed = this.gamepad.buttons[1].pressed;
 
                         this.currLJ_X = refineAxisValue(this.gamepad.axes[0]);
                         this.currLJ_Y = refineAxisValue(this.gamepad.axes[1]);
@@ -243,6 +272,12 @@
 
                 keyUp (e) {
                     switch(e.code) {
+                        case this.keybinds.abutton:
+                            this.ALocked = false;
+                            break;
+                        case this.keybinds.bbutton:
+                            this.BLocked = false;
+                            break;
                         case this.keybinds.up:
                             this.UpPressed = false;
                             break;
@@ -263,16 +298,18 @@
 
             class Coordinate {
                 constructor (x, y, color) {
-                    //console.log("x: " + x + ", y: " + y + ", with color: " + color);
 
-                    this.geometry = new THREE.RingGeometry(player_radius, (player_radius + .03), 32);
+                    this.x = x;
+                    this.y = y;
+
+                    this.geometry = new THREE.CircleGeometry(player_radius, 32);
                     this.material = new THREE.MeshBasicMaterial({
-                        color: color,
-                        side: THREE.DoubleSide
+                        color: color
                     });
                     this.coordObject = new THREE.Mesh(this.geometry, this.material);
-                    this.coordObject.position.x = x;
-                    this.coordObject.position.y = y;
+
+                    this.coordObject.position.x = this.x;
+                    this.coordObject.position.y = this.y;
 
                     scene.add(this.coordObject);
                 }
@@ -281,7 +318,8 @@
             class CoordinateLine {
                 constructor (x1, y1, x2, y2, color) {
                     this.material = new THREE.LineBasicMaterial({
-                        color: color
+                        color: color,
+                        linewidth: 3
                     });
 
                     this.geometry = new THREE.Geometry();
@@ -291,8 +329,63 @@
                         new THREE.Vector3(x2, y2, 0)
                     );
 
-                    this.line = new THREE.Line(this.geometry, this.material);
-                    scene.add(this.line);
+                    this.coordLineObject = new THREE.Line(this.geometry, this.material);
+                    scene.add(this.coordLineObject);
+                }
+            }
+
+            class GuidingLine {
+                constructor (x1, y1, x2, y2, color) {
+                    this.material = new THREE.LineDashedMaterial({
+                        color: color,
+                        linewidth: 3,
+                        scale: 1,
+                        dashSize: .04,
+                        gapSize: 2
+                    });
+
+                    this.geometry = new THREE.Geometry();
+
+                    this.geometry.vertices.push(
+                        new THREE.Vector3(x1, y1, 0),
+                        new THREE.Vector3(x2, y2, 0)
+                    );
+
+                    this.guidingLineObject = new THREE.Line(this.geometry, this.material);
+                    scene.add(this.guidingLineObject);
+                }
+            }
+
+            class Polygon {
+                constructor (coordsArray, color) {
+
+                    this.material = new THREE.MeshBasicMaterial({
+                        color: color
+                    });
+
+                    this.extrudeSettings = { 
+                        amount: 1, 
+                        bevelEnabled: false, 
+                        bevelSegments: 2, 
+                        steps: 2, 
+                        bevelSize: 1, 
+                        bevelThickness: 1 
+                    };
+
+                    this.polygonShape = new THREE.Shape();
+
+                    this.polygonShape.moveTo(coordsArray[0].x, coordsArray[0].y);
+                    var i = 1;
+                    while (i < coordsArray.length) {
+                        this.polygonShape.lineTo(coordsArray[i].x, coordsArray[i].y);
+                        i++;
+                    }
+
+                    this.geometry = new THREE.ShapeGeometry(this.polygonShape, this.extrudeSettings);
+
+                    this.mesh = new THREE.Mesh(this.geometry, this.material);
+
+                    scene.add(this.mesh);
                 }
             }
 
@@ -513,9 +606,9 @@
              * Adds players to the game
              */
             function addPlayers() {
-                players.push(new Player(0x4d88d5, "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight"}));
+                players.push(new Player(0x4d88d5, "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "Space", bbutton: "ShiftLeft"}));
                 players.push(new Player(0xff0000, "Player 2", {up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}));
-                players.push(new Player(0x009933, "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL"}));
+                players.push(new Player(0x009933, "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL", abutton: "KeyY", bbutton: "KeyU"}));
                 players.push(new Player(0xffff00, "Player 4", {up: "KeyG", down: "KeyB", left: "KeyV", right: "KeyN"}));
                 
                 players.forEach(function (player) {
