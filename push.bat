@@ -1,0 +1,1 @@
+robocopy "C:\Git\control.io_code\web" "C:\Git\control-io-ics485sp20.github.io\projects\control-io" /mir
