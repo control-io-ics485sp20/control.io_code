@@ -1,6 +1,11 @@
 # control.io-ics485sp20
 Control.io Game Concept
 
+This project makes extensive use of the following tutorial:
+https://victorzhou.com/blog/build-an-io-game-part-1/
+https://victorzhou.com/blog/build-an-io-game-part-2/
+https://github.com/vzhou842/example-.io-game
+
 ## Website ##
 To be posted.
 

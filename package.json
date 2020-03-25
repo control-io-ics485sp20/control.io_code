@@ -1,0 +1,37 @@
+{
+  "name": "control.io",
+  "version": "1.0.0",
+  "description": "Control.io Game Concept",
+  "main": "src/server/server.js",
+  "scripts": {
+    "test": "hello",
+    "dev": "cross-env NODE_ENV=development node src/server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/control-io-ics485sp20/control.io_code.git"
+  },
+  "author": "Barryn Chun, Jayme Sugitaya, Woojoon Hwang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/control-io-ics485sp20/control.io_code/issues"
+  },
+  "homepage": "https://control-io-ics485sp20.github.io/",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
+    "throttle-debounce": "^2.1.0",
+    "webpack-merge": "^4.2.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.4.2",
+    "html-webpack-plugin": "^4.0.1",
+    "mini-css-extract-plugin": "^0.9.0",
+    "webpack": "^4.42.1",
+    "webpack-dev-middleware": "^3.7.2"
+  }
+}
