@@ -15,6 +15,13 @@
               cursor: pointer;
               text-align: center;}
 
+            button:hover {background-color: #999}
+
+            button:active {
+              background-color: #999;
+              transform: translateY(4px);
+            }
+
             #btn1 { position: absolute;
               top: 2%;
               right: 1%;
@@ -27,7 +34,7 @@
     <body>
 
     <div id ="btn">
-      <button class="button" onClick = "this.style.visibility= 'hidden';">Start</button>
+      <button class="button" onClick = "this.style.visibility= 'hidden';">Click to Start!</button>
     </div>
 
     <div id ="btn1">
