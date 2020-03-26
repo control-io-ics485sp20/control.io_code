@@ -6,6 +6,7 @@
 class Player {
     constructor(color, name, keybinds) {
         this.coordsArray = [];
+        this.coordsArrayPointList = [];
         this.linesArray = [];
         this.claimedShapesArray = [];
 
@@ -41,7 +42,7 @@ class Player {
         // this.player_object = new THREE.Mesh(this.geometry, this.material);
 
         this.randomSpawn();
-        this.newCoord();
+        this.addNewCoord();
 
         this.guidingLine = new GuidingLine(this.coordsArray[0].x, this.coordsArray[0].y, this.player_object.position.x, this.player_object.position.y, this.color.normal);
     };
@@ -107,37 +108,135 @@ class Player {
         //TODO Constrain y axes movement to area
     }
 
-    newCoord() {
+    addNewCoord() {
         if (this.coordsArray == undefined || this.coordsArray.length == 0) {
+            //add point
+            this.coordsArrayPointList.push([this.player_object.position.x, this.player_object.position.y]);
+
+            //draw point
             this.coordsArray.push(new Coordinate(this.player_object.position.x, this.player_object.position.y, this.color.normal));
         } else {
-            var lastCoord = this.coordsArray[this.coordsArray.length - 1];
+            var thisPoint = [this.player_object.position.x, this.player_object.position.y];
+            var lastPoint = this.coordsArrayPointList[this.coordsArray.length - 1];
 
-            this.coordsArray.push(new Coordinate(this.player_object.position.x, this.player_object.position.y, this.color.normal));
+            if ((thisPoint != lastPoint) && (!this.anyLinesIntersect(thisPoint, lastPoint))) {
+                var lastCoord = this.coordsArray[this.coordsArray.length - 1];
 
-            this.linesArray.push(new CoordinateLine(this.player_object.position.x, this.player_object.position.y, lastCoord.x, lastCoord.y, this.color.normal));
-            
-            this.guidingLine.guidingLineObject.geometry.vertices[0].x = this.player_object.position.x;
-            this.guidingLine.guidingLineObject.geometry.vertices[0].y = this.player_object.position.y;
+                //add point
+                this.coordsArrayPointList.push([this.player_object.position.x, this.player_object.position.y]);
+
+                //draw point
+                this.coordsArray.push(new Coordinate(this.player_object.position.x, this.player_object.position.y, this.color.normal));
+                //draw line
+                this.linesArray.push(new CoordinateLine(this.player_object.position.x, this.player_object.position.y, lastCoord.x, lastCoord.y, this.color.normal));
+                
+                this.guidingLine.guidingLineObject.geometry.vertices[0].x = this.player_object.position.x;
+                this.guidingLine.guidingLineObject.geometry.vertices[0].y = this.player_object.position.y;
+            }
         }
     }
 
+    //checks if any of the lines intersect
+    anyLinesIntersect(l1p1, l1p2) {
+        var x = 0;
+        while (x < this.coordsArrayPointList.length) {
+            if ((x + 1) < this.coordsArrayPointList.length) { //if not the last point
+                // console.log(this.coordsArrayPointList[x], this.coordsArrayPointList[x+1])
+                var l2p1 = this.coordsArrayPointList[x];
+                var l2p2 = this.coordsArrayPointList[x+1];
+                if(this.linesIntersect(l1p1, l1p2, l2p1, l2p2)) {
+                    return true;
+                }
+            }
+            x++;
+        }
+        return false;
+    }
+
+    //http://jeffreythompson.org/collision-detection/line-line.php
+    //checks if two lines intersect
+    linesIntersect(l1p1, l1p2, l2p1, l2p2) {
+        //line 1 coords
+        var x1 = l1p1[0];
+        var y1 = l1p1[1];
+        var x2 = l1p2[0];
+        var y2 = l1p2[1];
+
+        //line 1 coords
+        var x3 = l2p1[0];
+        var y3 = l2p1[1];
+        var x4 = l2p2[0];
+        var y4 = l2p2[1];
+
+        // calculate the distance to intersection point
+        var uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        var uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+      
+        // if uA and uB are between 0-1, lines are colliding
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            var intersectionX = x1 + (uA * (x2-x1));
+            var intersectionY = y1 + (uA * (y2-y1));
+
+            var iPoint = [intersectionX, intersectionY]
+
+            // var intersect_is_l1p1 = (intersectionX == x1) && (intersectionY == y1);
+            // var intersect_is_l1p2 = (intersectionX == x2) && (intersectionY == y2);
+            // var intersect_is_l2p1 = (intersectionX == x3) && (intersectionY == y3);
+            // var intersect_is_l2p2 = (intersectionX == x4) && (intersectionY == y4);
+
+            var intersect_is_l1p1 = JSON.stringify(iPoint) == JSON.stringify(l1p1);
+            var intersect_is_l1p2 = JSON.stringify(iPoint) == JSON.stringify(l1p2);
+            var intersect_is_l2p1 = JSON.stringify(iPoint) == JSON.stringify(l2p1);
+            var intersect_is_l2p2 = JSON.stringify(iPoint) == JSON.stringify(l2p2);
+
+            //if the intersection is not the endpoints
+            // if(!(!(l1p1_intersects) &&
+            // !(l1p2_intersects) &&
+            // !(l2p1_intersects) &&
+            // !(l2p2_intersects))
+            // ) {
+
+            if(!intersect_is_l1p1 && !intersect_is_l1p2 && !intersect_is_l2p1 && !intersect_is_l2p2) {
+                console.log(JSON.stringify(iPoint) + " is not " + JSON.stringify(l1p1))
+                console.log(JSON.stringify(iPoint) + " is not " + JSON.stringify(l1p2))
+                console.log(JSON.stringify(iPoint) + " is not " + JSON.stringify(l2p1))
+                console.log(JSON.stringify(iPoint) + " is not " + JSON.stringify(l2p2))
+
+                console.log(l1p1, l1p2, l2p1, l2p2);
+                console.log(intersect_is_l1p1,intersect_is_l1p2,intersect_is_l2p1,intersect_is_l2p2);
+                console.log(intersectionX,intersectionY);
+                console.log("Found an intersecting line.")
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     setPoly() {
-        this.newCoord();
+        if (this.coordsArray.length > 1) {
+            this.addNewCoord();
 
-        this.claimedShapesArray.push(new Polygon(this.coordsArray, this.color.dark));
+            this.claimedShapesArray.push(new Polygon(this.coordsArray, this.color.dark));
+            window.game.claimSpace(this.coordsArrayPointList);
+            // console.log(this.coordsArrayList);
 
-        while (this.coordsArray.length > 0) {
-            var n = this.coordsArray.pop();
-            scene.remove(n.coordObject);
+            //remove drawings
+            while (this.coordsArray.length > 0) {
+                var n = this.coordsArray.pop();
+                scene.remove(n.coordObject);
+            }
+            while (this.linesArray.length > 0) {
+                var n = this.linesArray.pop();
+                scene.remove(n.coordLineObject);
+            }
+
+            //clear coordinates
+            this.coordsArrayPointList = []
+
+            //add a starting coordinate
+            this.addNewCoord();
         }
-
-        while (this.linesArray.length > 0) {
-            var n = this.linesArray.pop();
-            scene.remove(n.coordLineObject);
-        }
-
-        this.newCoord();
     }
 
     updatePos () {
@@ -156,7 +255,7 @@ class Player {
             }
         } else {
             if (this.ALocked == false && this.gamepad.buttons[0].pressed) {
-                this.newCoord();
+                this.addNewCoord();
                 this.ALocked = true;
             } else if (!this.gamepad.buttons[0].pressed) {
                 this.ALocked = false;
@@ -196,7 +295,7 @@ class Player {
         switch(e.code) {
             case this.keybinds.abutton:
                 if (!this.ALocked) {
-                    this.newCoord();
+                    this.addNewCoord();
                     this.ALocked = true;
                 }
                 break;

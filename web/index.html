@@ -9,14 +9,14 @@
         </style>
     </head>
     <body>
-        <script src="js/gamemap.js"></script>
+        <script src="js/game.js"></script>
         <script src="js/lib/three.js"></script>
         <script src="js/lib/tinycolor.js"></script>
         <script src="js/lib/THREE.MeshLine.js"></script>
         <script src="js/player.js"></script>
         <script>
 
-
+            // var window.game;
             //Web JS Project that implements THREE.js.
             //Literally based off of tutorial:
             //https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
@@ -372,7 +372,8 @@
                 // console.log(window.innerWidth);
                 // console.log(window.innerHeight);
 
-                var map = new GameMap({width: window.innerWidth, height: window.innerHeight});
+                // var map = new Game({width: window.innerWidth, height: window.innerHeight});
+                window.game = new Game();
 
                 // var img = new SimpleImage(200,200);
                 // print(img);
