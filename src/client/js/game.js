@@ -1,24 +1,26 @@
-class Game {
-    constructor() {
-        console.log("[Control.IO] Starting game instance...");
+function Game() {
+    console.log("[Control.IO] Starting game instance...");
+    init();
 
-        this.init();
-    }
+    // constructor() {
+
+    //     this.init();
+    // }
 
     /**
      * init
      *
      * Initializes the game.
      */
-    init() {
-        this.initMap();
+    function init() {
+        initMap();
 
-        this.addPlayers();
+        addPlayers();
 
-        this.runAnimation();
+        runAnimation(this);
     };
 
-    initMap() {
+    function initMap() {
         console.log("Initializing map...")
         var map = new GameMap({width: window.innerWidth, height: window.innerHeight});
     
@@ -38,7 +40,7 @@ class Game {
      *
      * Adds players to the game
      */
-    addPlayers() {
+    function addPlayers() {
         players.push(new Player("#4d88d5", "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "KeyZ", bbutton: "ShiftLeft"}));
         players.push(new Player("#ff0000", "Player 2", {up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}));
         players.push(new Player("#009933", "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL", abutton: "KeyY", bbutton: "KeyU"}));
@@ -49,23 +51,22 @@ class Game {
         });
     }
 
-    updatePos() {
+    function updatePos() {
         players.forEach(function (player) {
             player.updatePos();
         });
     }
-    
+
     /**
      * runAnimation
      *
      * Starts the animation sequence. Methods within are called on each frame.
      */
-    runAnimation() {
+    function runAnimation() {
         requestAnimationFrame(runAnimation);
-    
-        this.updatePos();
-        // gamepad_detect();
-    
+
+        updatePos();
+
         renderer.render(scene, camera);
     }
 }
