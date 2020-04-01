@@ -241,6 +241,11 @@
 
                     this.claimedShapesArray.push(new Polygon(this.coordsArray, this.color));
 
+                    this.coordsArray[0].x = this.coordsArray[0].x + 0.1;
+                    this.coordsArray[0].y = this.coordsArray[0].y + 0.1;
+
+
+
                     while (this.coordsArray.length > 0) {
                         var n = this.coordsArray.pop();
                         scene.remove(n.coordObject);
@@ -255,6 +260,19 @@
                 }
 
                 updatePos () {
+                    //if(players[0].claimedShapesArray.length !== 0) {
+                      //players[0].claimedShapesArray[0].geometry.vertices[0].x = players[0].claimedShapesArray[0].geometry.vertices[0].x + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[0].y = players[0].claimedShapesArray[0].geometry.vertices[0].y + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[1].x = players[0].claimedShapesArray[0].geometry.vertices[1].x + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[1].y = players[0].claimedShapesArray[0].geometry.vertices[1].y + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[2].x = players[0].claimedShapesArray[0].geometry.vertices[2].x + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[2].y = players[0].claimedShapesArray[0].geometry.vertices[2].y + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[3].x = players[0].claimedShapesArray[0].geometry.vertices[3].x + 0.00000001;
+                      //players[0].claimedShapesArray[0].geometry.vertices[3].y = players[0].claimedShapesArray[0].geometry.vertices[3].y + 0.00000001;
+                      //console.log(players[0].claimedShapesArray[0].geometry.vertices[0].x);
+                    //}
+
+
                     if (this.gamepad == undefined) {
                         if (this.ALocked == false) {
                             this.newCoord();
@@ -314,6 +332,7 @@
                         this.moveY(-this.currLJ_Y);
                         this.moveX(this.currLJ_X);
                     }
+
                 }
 
                 keyDown (e) {
@@ -377,6 +396,7 @@
                     this.coordObject.position.y = this.y;
 
                     scene.add(this.coordObject);
+
                 }
             }
 
