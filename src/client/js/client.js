@@ -27,6 +27,7 @@ camera.position.z = 5;
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( max_x, max_y );
 document.body.appendChild( renderer.domElement );
+//adds item to body. Probably belongs in render library.
 
 console.log("[Control.IO] Loaded client module.")
 

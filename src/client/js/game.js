@@ -13,12 +13,31 @@ function Game() {
      * Initializes the game.
      */
     function init() {
+        //if singleplayer selected
+        runSinglePlayer();
+
+        //if multiplayer selected
+        //totally optional
+    };
+
+    function runSinglePlayer() {
+        console.log("Starting a local session...")
+        //start lobby
+        
+        //start game countdown
+        //start game
+        //create start game timer
         initMap();
 
         addPlayers();
 
         runAnimation(this);
-    };
+        //end game screen
+    }
+
+    function runMultiPlayer() {
+        console.log("Joining a multiplayer session...");
+    }
 
     function initMap() {
         console.log("Initializing map...")
