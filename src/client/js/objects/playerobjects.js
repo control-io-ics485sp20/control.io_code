@@ -2,7 +2,7 @@
     * A coordinate that a player can create.
     */
    class PlayerCoordinate {
-    constructor (x, y, color) {
+    constructor (gamewindow, x, y, color) {
 
         this.x = x;
         this.y = y;
@@ -16,7 +16,7 @@
         this.coordObject.position.x = this.x;
         this.coordObject.position.y = this.y;
 
-        scene.add(this.coordObject);
+        gamewindow.scene.add(this.coordObject);
     }
 }
 
@@ -24,7 +24,7 @@
     * A line joining two coordinates.
     */
 class PlayerCoordinateLine {
-    constructor (x1, y1, x2, y2, color) {
+    constructor (gamewindow, x1, y1, x2, y2, color) {
         this.material = new THREE.LineBasicMaterial({
             color: color,
             linewidth: 3
@@ -38,7 +38,7 @@ class PlayerCoordinateLine {
         );
 
         this.coordLineObject = new THREE.Line(this.geometry, this.material);
-        scene.add(this.coordLineObject);
+        gamewindow.scene.add(this.coordLineObject);
     }
 }
 
@@ -46,7 +46,7 @@ class PlayerCoordinateLine {
  * A guiding line that follows the player, showing where the next face of their polygon will be.
  */
 class PlayerGuidingLine {
-    constructor (x1, y1, x2, y2, color) {
+    constructor (gamewindow, x1, y1, x2, y2, color) {
         this.material = new THREE.LineDashedMaterial({
             color: color,
             linewidth: 3,
@@ -63,7 +63,7 @@ class PlayerGuidingLine {
         );
 
         this.guidingLineObject = new THREE.Line(this.geometry, this.material);
-        scene.add(this.guidingLineObject);
+        gamewindow.scene.add(this.guidingLineObject);
     }
 }
 
@@ -71,7 +71,7 @@ class PlayerGuidingLine {
  * A polygon that a 
  */
 class PlayerPolygon {
-    constructor (coordsArray, color) {
+    constructor (gamewindow, coordsArray, color) {
 
         this.material = new THREE.MeshBasicMaterial({
             color: color
@@ -102,6 +102,8 @@ class PlayerPolygon {
 
         console.log(this.polygonShape.area);
 
-        scene.add(this.mesh);
+        gamewindow.scene.add(this.mesh);
     }
 }
+
+// class PlayerObject
