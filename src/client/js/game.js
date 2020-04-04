@@ -22,29 +22,39 @@ function Game() {
         //totally optional
     };
 
+    
+
     function runLocalPlayer() {
         console.log("Starting a local session...")
-        gameLobby = new GameLobby(this,"Starting Local Session...");
-        gameStatus = "singleplayer-lobby"
-        var gameLobbyResult = gameLobby.show();
-        if (gameLobbyResult) {
-            gameStatus = "singleplayer-startgame";
-            //start game countdown
-            //start game
-            //create start game timer
-            gameWindow = new GameWindow();
-            initMap();
-
-            addPlayers();
-
-            runAnimation(this);
-        }
-        
-        //end game screen
+        gameLobby = new GameLobby("Starting Local Session...");
+        gameStatus = "local-lobby"
+        var gameLobbyResult = gameLobby.create();
     }
 
     function runMultiPlayer() {
         console.log("Joining a multiplayer session...");
+        //totally optional
+    }
+
+    function startGame(controllers) {
+        console.log(controllers);
+
+        gameStatus = "singleplayer-game";
+        //start game countdown
+        //start game
+        //create start game timer
+        gameWindow = new GameWindow();
+
+        initMap();
+
+        addPlayers(controllers);
+
+        runAnimation(this);
+        //end game screen
+    }
+
+    return {
+        startGame: startGame
     }
 
     function initMap() {
@@ -67,11 +77,21 @@ function Game() {
      *
      * Adds players to the game
      */
-    function addPlayers() {
-        players.push(new Player(gameWindow, "#4d88d5", "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "KeyZ", bbutton: "ShiftLeft"}));
-        players.push(new Player(gameWindow, "#ff0000", "Player 2", {up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}));
-        players.push(new Player(gameWindow, "#009933", "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL", abutton: "KeyY", bbutton: "KeyU"}));
-        players.push(new Player(gameWindow, "#ffff00", "Player 4", {up: "KeyG", down: "KeyB", left: "KeyV", right: "KeyN"}));
+    function addPlayers(controllers) { //TODO only add players from lobby
+        Object.keys(controllers).forEach(function (id) {
+            console.log(id);
+            console.log(controllers[id]);
+
+            if (controllers[id]["player"] != null) {
+                if (controllers[id]["gamepad"] != null) {
+                    players.push(new Player(gameWindow, controllers[id]["player"]["color"], controllers[id]["player"]["name"], controllers[id]["gamepad"], null));
+                } else if (id == "keyboard1") {
+                    players.push(new Player(gameWindow, controllers[id]["player"]["color"], controllers[id]["player"]["name"], null, {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "KeyZ", bbutton: "ShiftLeft"}) );
+                }
+            }
+        });
+
+        
         
         players.forEach(function (player) {
             gameWindow.scene.add(player.getPlayerObject());
@@ -102,24 +122,11 @@ function Game() {
      * controllerConnectedEvent
      * Detects when a gamepad is connected and announces it.
      */
-    // const gamepad = new Gamepad();
-
-    // gamepad.on('connect', e => {
-    //     console.log(`controller ${e.index} connected!`);
-    // });
-
-    // gamepad.on('disconnect', e => {
-    //     console.log(`controller ${e.index} disconnected!`);
-    // });
-
     function controllerConnectedEvent(event) {
-        // console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
-        // event.gamepad.index, event.gamepad.id,
-        // event.gamepad.buttons.length, event.gamepad.axes.length);
-        //imagine spawning a player when they connect a gamepad though. Could make for a cool feature.
-
-        if (gameStatus == "singleplayer-lobby") {
+        if (gameStatus == "local-lobby") {
             gameLobby.controllerJoin(event);
+        } else if (gameStatus == "singleplayer-game") {
+            //allow for reconnect of disconnected player
         } else {
             var i = 0;
             while(i < players.length) {
@@ -135,8 +142,10 @@ function Game() {
     };
 
     function controllerDisconnectedEvent(event) {
-        if (gameStatus == "singleplayer-lobby") {
+        if (gameStatus == "local-lobby") {
             gameLobby.controllerLeave(event);
+        } else if (gameStatus == "singleplayer-game") {
+            //allow for reconnect of disconnected player
         } else {
             var i = 0;
             while(i < players.length) {
@@ -152,13 +161,24 @@ function Game() {
     }
 
     function keyUp(event) {
-        if (gameStatus == "singleplayer-lobby") {
-            if (event.code == "Space") {
-                gameLobby.joinLeaveKeyboard();
-            }
+        if (gameStatus == "local-lobby") {
+            gameLobby.joinLeaveKeyboard(event);
+
+            // if (event.code == "Space") {
+            // } else if (event.) {
+
+            // }
+        } else if (gameStatus == "singleplayer-game") {
+
+        } else {
+
         }
     }
     
+    // players.push(new Player(gameWindow, "#4d88d5", "Player 1", {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "KeyZ", bbutton: "ShiftLeft"}));
+    // players.push(new Player(gameWindow, "#ff0000", "Player 2", {up: "KeyW", down: "KeyS", left: "KeyA", right: "KeyD"}));
+    // players.push(new Player(gameWindow, "#009933", "Player 3", {up: "KeyI", down: "KeyK", left: "KeyJ", right: "KeyL", abutton: "KeyY", bbutton: "KeyU"}));
+    // players.push(new Player(gameWindow, "#ffff00", "Player 4", {up: "KeyG", down: "KeyB", left: "KeyV", right: "KeyN"}));
 }
 
 console.log("[Control.IO] Loaded game module.")

@@ -40,16 +40,51 @@
     border-radius: 50px;
     margin-left: 8px;
     margin-right: 8px;
+
+    position: relative;
 }
 
-.gamelobby-playercard-playername {
+.gamelobby-playercard-playername, .gamelobby-playercard-joinedstatus {
     font-family: rainfall, sans-serif;
     font-weight: bold;
-    background-color: green;
     padding-top: 10px;
     padding-bottom: 10px;
     color: white;
     border-radius: 50px;
+
+    /* vertical-align: middle; */
+}
+
+.gamelobby-playercard-joinedstatus {
+    position: absolute;
+    /* background-color: rgb(218, 189, 29); */
+    background-color: green;
+    margin-bottom: 20px;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    /* width: 80%; */
+}
+
+#gamelobby-readybutton {
+    background-color: rgb(158, 158, 158);
+    font-family: rainfall, sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    width: 30%;
+    border-radius: 50px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 20px;
+    /* height: 100px; */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+}
+
+#gamelobby-readybutton-playercount {
+    display: inline-block;
+    margin-left: 30px;
 }
 
 @keyframes animate-roomname {

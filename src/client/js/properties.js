@@ -1,8 +1,11 @@
 var gameName = "Control.IO"
 
 var lobbyWaitingMessage = "Waiting for players..."
-var lobbyJoinInstructionMessage = "Press SPACE to join by keyboard, or connect a controller"
-var lobbyJoinControllerInstructionMessage = "Controller detected.<br><br>Press START to join."
+var lobbyJoinInstructionMessage = "Join by keyboard or connect a controller."
+var lobbyJoinKeyboardInstructionMessage = "Keyboard detected.<br><br>Press <b>SPACE</b> to join this controller."
+var lobbyJoinControllerInstructionMessage = "Controller detected.<br><br>Press <b>START</b> to join this controller."
+var lobbyPlayerJoinedStatus = "Joined"
+var readyButtonText = "SHIFT / A - START GAME"
 
 var max_x = window.innerWidth;
 var min_x = -max_x;
