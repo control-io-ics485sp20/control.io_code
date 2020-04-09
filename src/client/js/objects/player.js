@@ -91,8 +91,15 @@ class Player {
 
     setCoord() {
         if (this.coordsArray == undefined || this.coordsArray.length == 0) {
-            this.coordsArray.push(new PlayerCoordinate(this.gamewindow, this.asset.position.x, this.asset.position.y, this.color.normal));
-            this.guidingLine = new PlayerGuidingLine(this.gamewindow, this.coordsArray[0].x, this.coordsArray[0].y, this.asset.position.x, this.asset.position.y, this.color.normal);
+            // var tempPoint = new paper.Path.Line(new paper.Point(this.asset.position.x, this.asset.position.y), new paper.Point(this.asset.position.x, this.asset.position.y));
+            var tempPoint = new paper.Point(this.asset.position.x, this.asset.position.y);
+            // console.log("point intersects: " + this.checkPointIntersects(tempPoint));
+            if(!this.checkPointIntersects(tempPoint)) {
+                this.coordsArray.push(new PlayerCoordinate(this.gamewindow, this.asset.position.x, this.asset.position.y, this.color.normal));
+                this.guidingLine = new PlayerGuidingLine(this.gamewindow, this.coordsArray[0].x, this.coordsArray[0].y, this.asset.position.x, this.asset.position.y, this.color.normal);
+            }
+            
+            // tempPoint.remove();
         } else {
             if (!this.checkLineIntersects(this.guidingLine)) {
                 var lastCoord = this.coordsArray[this.coordsArray.length - 1];
@@ -119,10 +126,10 @@ class Player {
     }
 
     removeVisuals() {
-        if (this.asset) {
+        if (this.asset != null) {
             this.asset.remove();
         }
-        if (this.guidingLine.asset) {
+        if (this.guidingLine != null && this.guidingLine.asset != null) {
             this.guidingLine.asset.remove();
         }
         while (this.coordsArray.length > 0) {
@@ -177,6 +184,19 @@ class Player {
 
         Object.keys(claimedshapes).forEach(function (id) {
             if (claimedshapes[id].intersects(line.asset)) {
+                intersectConflict = true;
+            }
+        });
+        return intersectConflict;
+    }
+
+    checkPointIntersects(point) {
+        let claimedshapes = this.gamewindow.layers["shapes"].children;
+
+        let intersectConflict = false;
+
+        Object.keys(claimedshapes).forEach(function (id) {
+            if (claimedshapes[id].contains(point)) {
                 intersectConflict = true;
             }
         });

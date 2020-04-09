@@ -19,7 +19,7 @@ var player_max_velocity = 5;
 var players = []; //array of players
 var player_radius = .07;
 
-var lineWidth = 5;
+var lineWidth = 6;
 
 //used to set the bounds of the canvas.?
 var canvas_multiplier = 335;

@@ -37,6 +37,7 @@ class PlayerGuidingLine {
         this.asset.strokeColor = color;
         this.asset.strokeWidth = lineWidth;
         this.asset.strokeCap = 'round';
+        this.asset.dashArray = [4, 10]
         gamewindow.layers["playerguidinglines"].addChild(this.asset);
     }
 }

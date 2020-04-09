@@ -90,7 +90,7 @@ function Game() {
                 if (controllers[id]["gamepad"] != null) {
                     players.push(new Player(this, gameWindow, gameMap, controllers[id]["player"]["color"], controllers[id]["player"]["name"], controllers[id]["gamepad"], null));
                 } else if (id == "keyboard1") {
-                    players.push(new Player(this, gameWindow, gameMap, controllers[id]["player"]["color"], controllers[id]["player"]["name"], null, {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "Space", bbutton: "LeftShift"}) );
+                    players.push(new Player(this, gameWindow, gameMap, controllers[id]["player"]["color"], controllers[id]["player"]["name"], null, {up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", abutton: "Space", bbutton: "ShiftLeft"}) );
                 }
                 playerCount++;
             }
