@@ -1,39 +1,53 @@
-class GameWindow {
+function GameWindow(properties) {
+    var canvas;
+    var properties = properties;
+    var layers = {};
 
-    constructor() {
-        this.scene = new THREE.Scene();
-        this.renderer = new THREE.WebGLRenderer();
-        this.camera = new THREE.PerspectiveCamera( zoom_percent, max_x / max_y, 1, 1000 );
-        // var camera = new THREE.OrthographicCamera( max_x / - 2, max_x / 2, max_y / 2, max_y / - 2, max_x, max_y );
-        this.camera.position.z = 5;
-    
-        this.renderer.setSize( max_x, max_y );
-        var domElement = this.renderer.domElement;
-        // domElement.css("z-index", "-3");
-        
-        // gameWindow.style.zIndex = -3;
-        // gameWindow.id = "gamewindow";
+    function init() {
 
-        domElement.style.zIndex = -3;
-        domElement.style.position = "fixed";
+        html = `
+        <canvas id="layer_main" class="gamewindow"></canvas>
+        `
+        $("#window").append(html);
 
-        $('#window').append(domElement);
+        $("#layer_main").css("z-index", -3);
 
-        //move to canvas, for later
-        // this.canvas = document.createElement("canvas");
-        // this.canvas.style.width="100%";
-        // this.canvas.style.height="100%";
-        // // this.canvas.fillStyle = "green";
+        $("#layer_main").css("width", properties.width);
+        $("#layer_main").css("height", properties.height);
 
-        // var ctx = this.canvas.getContext("2d");
-        // ctx.fillStyle = "black";
-        // ctx.fillRect(0, 0, max_x, max_y);
+        canvas = $("#layer_main")[0];
 
+        paper.setup(canvas);
+        layers["background"] = (new paper.Layer({name: 'background'}));
+        layers["shaperaster"] = (new paper.Layer({name: 'shaperaster'}));
+        layers["shapes"] = (new paper.Layer({name: 'shapes'}));
+        layers["playersetlines"] = (new paper.Layer({name: 'playersetlines'}));
+        layers["playerguidinglines"] = (new paper.Layer({name: 'playerguidinglines'}));
+        layers["players"] = (new paper.Layer({name: 'players'}));
+    }
 
-        // $('#window').append(this.canvas);
+    function addPlayer(x, y, color) {
+        var Player = new paper.Path.Circle({
+            center: [x, y],
+            radius: 8,
+            strokeWidth: 5,
+            strokeColor: color
+        });
+        layers["players"].addChild(Player);
+        return Player;
+    }
+
+    function removePlayer() {
 
     }
 
+    return {
+        init: init,
+        addPlayer: addPlayer,
+        removePlayer: removePlayer,
+        canvas: canvas,
+        layers: layers
+    }
     
 
     //adds item to body. Probably belongs in render library.
